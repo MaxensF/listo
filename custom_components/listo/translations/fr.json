@@ -1,0 +1,16 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Listo",
+        "description": "Crée la liste de courses partagée du foyer : app mobile hors-ligne, entité todo native et mini-API. Une seule instance par Home Assistant.\n\nLe code d'accès est optionnel : s'il est défini, l'app mobile devra l'envoyer à chaque requête.",
+        "data": {
+          "api_token": "Code d'accès API (optionnel)"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "L'intégration Listo est déjà configurée."
+    }
+  }
+}

@@ -1,0 +1,470 @@
+/* Listo PWA — mobile-first dark theme */
+
+:root {
+  --bg: #11191a; --card: #1c2627; --card2: #243233;
+  --accent: #4caf50; --accent-dim: #2e5d33;
+  --text: #e8f0e9; --muted: #8ba393; --danger: #ef5350;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; padding-bottom: 75px;
+}
+
+header {
+  /* Sticky, but slides away on scroll-down and back on scroll-up
+     (.hidden-hdr toggled in app.js) — frees the list while shopping. */
+  position: sticky; top: 0; z-index: 10;
+  transition: transform .25s ease;
+  background: var(--bg); border-bottom: 1px solid var(--card2);
+  padding: calc(env(safe-area-inset-top) + 8px) 16px 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+header.hidden-hdr { transform: translateY(-105%); }
+header h1 { font-size: 20px; flex: 1; }
+#updated { font-size: 12px; color: var(--muted); font-weight: normal; }
+
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.dot.off { background: var(--danger); }
+
+.iconbtn {
+  background: var(--card); border: none; color: var(--text);
+  border-radius: 10px; padding: 8px 12px; font-size: 15px; cursor: pointer;
+}
+.iconbtn svg, .iconbtn img { display: block; }
+
+main { max-width: 640px; margin: 0 auto; padding: 8px 12px; }
+
+.empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 16px; }
+
+ul { list-style: none; }
+li.item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border-radius: 10px;
+  padding: 7px 12px; margin: 4px 0; font-size: 16px;
+}
+li.item.checked { opacity: .45; }
+li.item.checked .name { text-decoration: line-through; }
+
+/* Ring color (--rc) and tint fill (--rct) are per-item CSS vars set
+   from the aisle palette in app.js; defaults keep the accent look. */
+.box {
+  width: 22px; height: 22px; flex: 0 0 22px;
+  border: 2px solid var(--rc, var(--accent)); border-radius: 7px;
+  background: var(--rct, transparent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff; transition: background .15s;
+}
+li.item.checked .box { background: var(--rc, var(--accent)); }
+/* Tick contrast: --ckf flips the white glyph to dark on light fills. */
+li.item.checked .box img { filter: var(--ckf, none); }
+
+/* Bottom "checked" section header — ticked rows land under it in the
+   order they were checked, out of the remaining aisle flow. */
+li.donehdr {
+  list-style: none; font-size: 12px; color: var(--muted);
+  letter-spacing: .4px; text-transform: uppercase;
+  padding: 6px 4px 2px; margin-top: 6px;
+  border-top: 1px solid var(--card2);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+li.donehdr .minibtn { text-transform: none; letter-spacing: normal; font-size: 13px; }
+
+.name { flex: 1; word-break: break-word; }
+.pending-tag {
+  font-size: 12px; color: var(--muted); border: 1px solid var(--card2);
+  border-radius: 20px; padding: 2px 8px; flex-shrink: 0;
+}
+.note { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 2px; }
+/* Quantity as an inline pill on the name line — scannable without
+   costing a second row of height per item. */
+.qtychip {
+  display: inline-block; font-size: 12px; font-weight: 400;
+  color: var(--muted); background: var(--card2);
+  border-radius: 7px; padding: 1px 7px; margin-left: 8px;
+  vertical-align: 1px;
+}
+
+/* Green flash on rows that just arrived via sync (SSE/poll). */
+@keyframes freshflash {
+  from { background: rgba(76, 175, 80, .35); }
+  to { background: var(--card); }
+}
+li.item.fresh { animation: freshflash 4s ease-out; }
+
+/* Ingredient rows inside the dish form */
+.ingrow { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+
+.editbtn {
+  flex-shrink: 0; background: none; border: none;
+  color: var(--muted); font-size: 18px; padding: 2px 6px; cursor: pointer;
+}
+.minibtn {
+  flex-shrink: 0; background: var(--card2); border: none; color: var(--text);
+  border-radius: 8px; font-size: 15px; padding: 6px 10px; cursor: pointer;
+}
+.editbtn img, .minibtn img { display: block; margin: 0 auto; }
+.primary img { display: block; margin: 0 auto; }
+
+/* Store selector (hidden until more than one store exists) */
+.storesel {
+  width: 100%; font-size: 15px; padding: 9px 12px; margin-bottom: 4px;
+  background: var(--card2); color: var(--text);
+  border: none; border-radius: 10px;
+}
+/* Store picker + delete button row inside the settings order editor */
+.storerow { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.storerow .storesel { flex: 1; width: auto; margin-bottom: 0; }
+/* Name field that replaces the select when "+ New store…" is picked —
+   sized like the select it stands in for. */
+.storerow input[type=text] {
+  flex: 1; min-width: 0; margin-bottom: 0;
+  font-size: 15px; padding: 9px 12px;
+}
+
+/* ---- Dishes / week menu section ---- */
+#dishesSec { margin-top: 14px; }
+.disheshead { display: flex; align-items: center; gap: 10px; }
+.disheshead h2 { flex: 1; }
+/* Sized to the h2 line so its appearance can't push the menu list down. */
+.disheshead .minibtn { padding: 3px 8px; font-size: 13px; }
+.srcrow { display: flex; gap: 6px; }
+.srcrow input { flex: 1; }
+#dishesSec h2 {
+  font-size: 15px; color: var(--muted); text-transform: uppercase;
+  letter-spacing: .06em; margin: 0 4px 4px;
+}
+.adddish {
+  width: 100%; background: none; color: var(--accent);
+  border: 1.5px dashed var(--accent-dim); border-radius: 12px;
+  padding: 12px; font-size: 16px; cursor: pointer; margin-top: 4px;
+}
+li.dish { font-size: 16px; padding: 8px 14px; }
+li.dish.checked { opacity: .45; }
+li.dish.checked .name { text-decoration: line-through; }
+
+/* Ingredient rows in the dish form: tighter than the main add row */
+.ingrow input { padding: 7px 8px; font-size: 14px; }
+
+/* The dish form gets slimmer side padding than other overlays so wide
+   ingredient lines keep as much room as possible. */
+#dishForm.overlay { padding: 10px; }
+#dishForm .panel { padding: 14px; }
+/* Slightly smaller type than the rest: the form is dense, the global
+   17px inputs/buttons dwarf it. */
+#dishForm h2 { font-size: 16px; }
+#dishForm input[type=text] { font-size: 15px; padding: 10px 12px; }
+#dishForm .ingrow input { font-size: 14px; padding: 7px 8px; }
+#dishForm button.primary { font-size: 15px; padding: 11px; }
+/* In the source row the link pill stretches to the row height like the
+   Import button next to it (default .srclink is a fixed 38px square). */
+#dishSrcLink { height: auto; align-items: center; }
+
+/* ---- Footer / inputs ---- */
+footer {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: var(--bg); border-top: 1px solid var(--card2);
+  padding: 8px 12px calc(env(safe-area-inset-bottom) + 8px);
+}
+/* Slightly slimmer add-bar fields than the global inputs — keeps the
+   footer low-profile without hurting tap targets. */
+footer input[type=text] { padding: 10px; }
+footer button.primary { padding: 10px 16px; }
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; }
+/* Single-row footer: add fields + compact done pill side by side. */
+.footrow { display: flex; gap: 8px; align-items: center; }
+.addrow { display: flex; gap: 8px; flex: 1; min-width: 0; }
+
+input[type=text], input[type=password], input[type=search], textarea {
+  flex: 1; font-size: 17px; padding: 14px;
+  background: var(--card2); color: var(--text);
+  border: 1px solid transparent; border-radius: 12px; outline: none;
+  width: 100%; font-family: inherit; resize: vertical;
+}
+input[type=text]:focus, input[type=password]:focus,
+input[type=search]:focus, textarea:focus {
+  border-color: var(--accent-dim);
+}
+input.qty { flex: 0 0 64px; width: 64px; }
+#cardsSearch { font-size: 15px; padding: 10px 14px; margin-bottom: 8px; }
+
+button.primary {
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 12px; padding: 14px 18px; font-size: 17px;
+  font-weight: 600; cursor: pointer;
+}
+/* Overlay close buttons (settings, sheets) — full-width bar style. */
+button.finish {
+  width: 100%; background: var(--card); color: var(--text);
+  border: 1px solid var(--accent-dim); border-radius: 12px;
+  padding: 12px; font-size: 15px; cursor: pointer;
+}
+/* Passive checked/total tally in the footer — display only, no action.
+   Collapses to zero width through a transition so the add fields beside
+   it grow smoothly instead of jumping. */
+.countpill {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  overflow: hidden; max-width: 160px;
+  background: var(--card); color: var(--muted);
+  border: 1px solid var(--card2); border-radius: 12px;
+  padding: 9px 12px; font-size: 15px;
+  transition: max-width .22s ease, padding .22s ease, opacity .18s ease,
+              border-width .22s ease;
+}
+.countpill.collapse {
+  max-width: 0; padding-left: 0; padding-right: 0;
+  border-width: 0; opacity: 0;
+}
+/* Pop-in for elements that appear conditionally (counter pill, checked-
+   section finish button, clear-cooked button). Replays each time the
+   [hidden] attribute is lifted on persistent elements. */
+@keyframes popin {
+  from { opacity: 0; transform: scale(.85) translateY(4px); }
+}
+.pop:not([hidden]) { animation: popin .22s ease; }
+/* Reverse pass: JS parks .popout on persistent elements, then flips
+   [hidden] on animationend. For the rebuilt checked header (which can't
+   animate a detached node) a ghost copy wears .fadeout instead. */
+@keyframes popout {
+  to { opacity: 0; transform: scale(.85) translateY(4px); }
+}
+.pop.popout { animation: popout .2s ease forwards; }
+/* Ghost checked-header: fades first, then collapses its height so the
+   dishes section below slides up instead of snapping on removal. */
+li.donehdr.fadeout {
+  overflow: hidden; max-height: 44px;
+  animation: ghostout .45s ease forwards;
+}
+@keyframes ghostout {
+  0% { opacity: 1; }
+  55% { opacity: 0; }
+  100% {
+    opacity: 0; max-height: 0;
+    padding-top: 0; padding-bottom: 0; margin-top: 0; border-width: 0;
+  }
+}
+button.danger {
+  width: 100%; background: none; color: var(--danger);
+  border: 1px solid var(--danger); border-radius: 12px;
+  padding: 12px; font-size: 15px; cursor: pointer;
+}
+button.armed {
+  background: var(--danger) !important; color: #fff !important;
+  border-color: var(--danger) !important; font-weight: 600;
+}
+button:active { transform: scale(.98); }
+
+#toast {
+  position: fixed; bottom: 150px; left: 50%; transform: translateX(-50%);
+  background: var(--card2); color: var(--text); padding: 10px 18px;
+  border-radius: 20px; font-size: 14px; opacity: 0;
+  transition: opacity .25s; pointer-events: none; z-index: 30;
+  display: flex; align-items: center; gap: 12px;
+}
+#toast.show { opacity: 1; pointer-events: auto; }
+#toastBtn {
+  display: none; background: none; border: none; color: var(--accent);
+  font-size: 14px; font-weight: 700; cursor: pointer; padding: 0;
+}
+
+/* Pull-to-refresh indicator under the header */
+#ptr {
+  position: fixed; top: 56px; left: 50%; transform: translateX(-50%);
+  z-index: 9; color: var(--accent); font-size: 26px; opacity: 0;
+  transition: opacity .15s; pointer-events: none;
+}
+
+.banner {
+  display: none; background: #4a3512; color: #ffd9a0;
+  border: 1px solid #8a6420; border-radius: 12px;
+  margin: 12px; padding: 14px; font-size: 14px; line-height: 1.45;
+}
+.banner.show { display: block; }
+.banner b { color: #fff; }
+.banner.upd { background: #123a1f; color: #b8f0c8; border-color: #2c6b42; }
+.banner.upd a { color: #7ddb9c; font-weight: 600; }
+.banner .close {
+  float: right; background: none; border: none; color: #ffd9a0;
+  font-size: 18px; cursor: pointer; padding: 0 4px;
+}
+
+/* Generic overlay (settings, item sheet, dish picker, dish form) */
+.overlay {
+  position: fixed; inset: 0; z-index: 20;
+  background: rgba(0, 0, 0, .6);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.overlay.show { display: flex; animation: fadein .18s ease; }
+.overlay.show .panel { animation: sheetin .22s cubic-bezier(.2,.9,.3,1.2); }
+/* Symmetric exit: JS parks .closing for the duration, then lifts .show. */
+.overlay.closing { animation: fadeout .18s ease forwards; }
+.overlay.closing .panel { animation: sheetout .18s ease forwards; }
+@keyframes fadein { from { opacity: 0; } }
+@keyframes sheetin {
+  from { opacity: 0; transform: translateY(24px) scale(.96); }
+}
+@keyframes fadeout { to { opacity: 0; } }
+@keyframes sheetout {
+  to { opacity: 0; transform: translateY(24px) scale(.96); }
+}
+.overlay .panel {
+  background: var(--card); border-radius: 16px; padding: 20px;
+  width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.overlay h2 { font-size: 18px; }
+.overlay label { font-size: 14px; color: var(--muted); display: block; margin-bottom: 6px; }
+.overlay select {
+  width: 100%; font-size: 16px; padding: 12px;
+  background: var(--card2); color: var(--text);
+  border: none; border-radius: 10px;
+}
+.overlay .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* Dish picker list — compact rows so more meals fit on screen */
+.picklist { display: flex; flex-direction: column; gap: 5px; }
+.picklist li {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card2); border-radius: 10px;
+  padding: 8px 12px; font-size: 15px;
+  transition: background .12s;
+}
+/* Pressed feedback — the whole row is tappable (opens the editor). */
+.picklist li:active { background: #2c3f40; }
+/* Fullscreen loyalty-card view: the card's color fills the screen and
+   the barcode sits on a white rounded card — max scanner contrast on
+   the code itself, brand color framing it for instant recognition. */
+.overlay.cardview { background: #11191a; }
+.overlay.show.cardview .cvbox { animation: sheetin .22s cubic-bezier(.2,.9,.3,1.2); }
+.cvbox {
+  margin: auto; text-align: center;
+  background: #fff; border-radius: 22px;
+  padding: 26px 22px 18px; width: min(88vw, 400px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+}
+.cvname { font-size: 24px; font-weight: 700; color: #000; margin-bottom: 18px; }
+#cardSvg { width: 100%; height: auto; }
+.cvnum { font-size: 17px; letter-spacing: 2px; color: #000; margin-top: 12px; }
+.cvhint { font-size: 12px; color: #888; margin-top: 20px; }
+
+/* Card number + photo-scan button on one row. */
+.numrow { display: flex; gap: 6px; align-items: stretch; }
+.numrow input { flex: 1; min-width: 0; }
+/* Stretch keeps the scan button exactly the input's height; the
+   horizontal padding alone sizes its width around the icon. */
+.numrow .iconbtn {
+  border: 1px solid var(--card2); border-radius: 10px;
+  padding: 0 10px;
+}
+/* Color picker in the card form (same look as the aisle dot picker). */
+input[type="color"].cardcolor {
+  width: 36px; height: 36px; cursor: pointer;
+}
+/* Loyalty-card rows wear the card's own color so it is spotted at a
+   glance. ".light" (set from the color's luminance) flips text and
+   icon glyphs to dark. */
+li.cardrow { color: #fff; padding: 14px; font-size: 17px;
+             background: var(--rowbg, var(--card2)); }
+li.cardrow.light { color: #1a1a1a; }
+/* .picklist li .name pins accent green — override needs one more
+   class of specificity so card rows inherit their contrast color. */
+.picklist li.cardrow .name { color: inherit; }
+/* Card-row buttons draw their glyph through a currentColor mask so
+   the icon is exactly the row's contrast color — readable on any
+   card color without per-color filters. --ico picks the glyph. */
+li.cardrow .editbtn { color: inherit; }  /* override .editbtn's muted */
+li.cardrow .editbtn img { display: none; }
+li.cardrow .editbtn::before {
+  content: ""; display: block; margin: 0 auto;
+  width: 18px; height: 18px; background: currentColor;
+  -webkit-mask: var(--ico) center/contain no-repeat;
+  mask: var(--ico) center/contain no-repeat;
+}
+/* While armed for 2-tap confirm, only the "Confirmer ?" text shows. */
+li.cardrow .editbtn.armed::before { display: none; }
+/* .picklist li:active would override the colored background with a
+   flat gray — pin the row color and dim through a filter instead. */
+.picklist li.cardrow:active { background: var(--rowbg); filter: brightness(.92); }
+
+
+/* Accent names signal the row is tappable (opens the dish editor) —
+   same convention as every interactive element in the app. */
+.picklist li .name { flex: 1; color: var(--accent); font-weight: 600; }
+.addpick {
+  flex-shrink: 0; background: var(--accent); border: none;
+  border-radius: 8px; padding: 6px 10px; cursor: pointer;
+}
+.addpick img { display: block; margin: 0 auto; }
+.addpick:disabled { background: var(--card2); opacity: .6; cursor: default; }
+.picklist li.inmenu .name { opacity: .45; }
+#backupText {
+  font-family: monospace; font-size: 12px; min-height: 220px;
+}
+
+/* Aisle-order editor in Settings */
+/* Neighbours displaced by a drag carry a translateY offset — the
+   transition makes them glide. The dragged row opts out (.dragging)
+   so it tracks the finger without lag. */
+.orderrow {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--card2); border-radius: 10px;
+  padding: 5px; margin-bottom: 6px; font-size: 14px;
+  transition: transform .18s ease;
+}
+.orderrow .name { flex: 1; min-width: 0; }
+/* Names are editable boxes shown permanently — use the darker card
+   bg so the field reads against the card2 row. */
+.orderrow .renamebox {
+  flex: 1; min-width: 0; margin: 0; font-size: 14px; padding: 6px 8px;
+  background: var(--card);
+}
+.orderrow .minibtn { font-size: 13px; padding: 6px 8px; }
+.orderrow .minibtn:disabled { opacity: .3; }
+.orderrow .catcolor {
+  width: 24px; height: 24px; cursor: pointer; flex-shrink: 0;
+}
+/* Native color inputs render an inner square swatch that ignores the
+   element's own border-radius — only these pseudo-elements make it a
+   real circle. */
+input[type="color"] {
+  -webkit-appearance: none; appearance: none;
+  padding: 0; border: none; background: none;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch {
+  border: none; border-radius: 50%;
+}
+input[type="color"]::-moz-color-swatch {
+  border: none; border-radius: 50%;
+}
+/* Drag handle — the only place a reorder gesture can start, so a drag
+   over a name field still scrolls instead of moving the row. */
+.orderrow .grip {
+  touch-action: none; cursor: grab;
+  /* Long-press must not raise the platform callout or start a text
+     selection — either would fire pointercancel and cancel the drag. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none; user-select: none;
+}
+.orderrow.dragging { opacity: .85; position: relative; z-index: 2; transition: none; }
+.addcat { display: flex; gap: 6px; margin-bottom: 4px; }
+.addcat input { flex: 1; }
+.version { text-align: center; margin-top: 8px; }
+
+/* Aisle color rides on the checkbox ring (--rc/--rct vars) — no
+   separate dot element taking row width. */
+
+/* External recipe link shown on dishes/menu entries — filled pill so it
+   clearly reads as a tappable "open in browser" button. */
+.srclink {
+  flex-shrink: 0; display: inline-flex; align-items: center;
+  justify-content: center; width: 38px; height: 38px;
+  border-radius: 10px; background: var(--accent); color: #fff;
+  font-size: 20px; font-weight: 800; text-decoration: none;
+}

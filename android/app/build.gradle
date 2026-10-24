@@ -1,0 +1,44 @@
+// Minimal WebView wrapper app — no androidx, no third-party deps.
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace "com.listo.app"
+    compileSdk 34
+
+    // Ship the PWA inside the APK (single source of truth = the
+    // integration's www/ dir). The WebView then always opens, even fully
+    // offline — no service worker needed to boot the app.
+    sourceSets {
+        main {
+            assets.srcDir '../../custom_components/listo/www'
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.listo.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    // CI restores the shared debug keystore (KEYSTORE_BASE64 secret) to
+    // android/ci-debug.keystore. Using an explicit signing config makes
+    // every build sign with that exact key — relying on AGP's implicit
+    // ~/.android/debug.keystore let it silently regenerate a throwaway
+    // key when the store couldn't load, breaking install-over-update.
+    // Local builds without the file keep the standard per-machine key.
+    signingConfigs {
+        debug {
+            def ciKeyStore = rootProject.file('ci-debug.keystore')
+            if (ciKeyStore.exists()) {
+                storeFile ciKeyStore
+                keyAlias 'androiddebugkey'
+                storePassword 'android'
+                keyPassword 'android'
+            }
+        }
+    }
+}

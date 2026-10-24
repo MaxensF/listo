@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#11191a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="stylesheet" href="style.css">
+<title>Listo</title>
+</head>
+<body>
+
+<div class="banner" id="haWarn">
+  <button class="close" id="haWarnClose" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt=""></button>
+  <b id="haWarnTitle"></b>
+  <span id="haWarnBody"></span>
+</div>
+
+<div class="banner upd" id="updateBanner">
+  <button class="close" id="updateBannerClose" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt=""></button>
+  <b id="updateTitle"></b>
+  <a id="updateLink" href="https://github.com/MaxensF/listo/actions" target="_blank" rel="noopener"></a>
+</div>
+
+<header>
+  <span class="dot" id="netdot" title="connectivity"></span>
+  <h1>Listo<br><span id="updated"></span></h1>
+  <button class="iconbtn" id="dishEditBtn" title="Dishes" aria-label="Dishes"><img src="img/dish.svg" width="20" height="20" alt=""></button>
+  <button class="iconbtn" id="cardsBtn" title="Cards" aria-label="Cards"><img src="img/card.svg" width="20" height="20" alt=""></button>
+  <button class="iconbtn" id="settingsBtn" title="Settings" aria-label="Settings"><img src="img/settings.svg" width="20" height="20" alt=""></button>
+</header>
+
+<div id="ptr"><img src="img/refresh-accent.svg" width="30" height="30" alt=""></div>
+
+<main>
+  <select id="storeSel" class="storesel" hidden></select>
+  <ul id="list"></ul>
+  <div class="empty" id="empty" hidden></div>
+
+  <section id="dishesSec">
+    <div class="disheshead">
+      <h2 id="dishesTitle"></h2>
+      <button class="minibtn pop" id="clearCooked" hidden></button>
+    </div>
+    <ul id="menuList"></ul>
+    <button class="adddish" id="addDishBtn"></button>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footrow">
+      <div class="addrow" id="addRow">
+        <input type="text" id="newItem" autocomplete="off" enterkeyhint="done">
+        <input type="text" id="newQty" class="qty" autocomplete="off" enterkeyhint="done">
+        <button class="primary" id="addBtn" aria-label="Add"><img src="img/plus.svg" width="20" height="20" alt=""></button>
+      </div>
+      <span class="countpill collapse" id="doneCount"></span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="settings">
+  <div class="panel">
+    <h2 id="settingsTitle"></h2>
+    <div>
+      <label id="langLabel" for="langSelect"></label>
+      <select id="langSelect">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+      </select>
+    </div>
+    <div>
+      <label id="tokenLabel" for="tokenInput"></label>
+      <input type="password" id="tokenInput" autocomplete="off">
+      <div class="hint" id="tokenHint"></div>
+    </div>
+    <div>
+      <label id="haBaseLabel" for="haBaseInput"></label>
+      <input type="text" id="haBaseInput" inputmode="url" autocomplete="off" spellcheck="false">
+      <div class="hint" id="haBaseHint"></div>
+    </div>
+    <div>
+      <label id="orderLabel"></label>
+      <button class="finish" id="aislesBtn" type="button"></button>
+      <div class="hint" id="orderHint"></div>
+    </div>
+    <div>
+      <label id="backupLabel"></label>
+      <div class="storerow">
+        <button class="minibtn" id="exportDishes" type="button"></button>
+        <button class="minibtn" id="importDishes" type="button"></button>
+      </div>
+      <div class="hint" id="backupHint"></div>
+    </div>
+    <button class="primary" id="saveSettings"></button>
+    <div class="hint version" id="versionLine"></div>
+    <button class="finish" id="closeSettings" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt="" style="margin:0 auto"></button>
+  </div>
+</div>
+
+<div class="overlay" id="itemSheet">
+  <div class="panel">
+    <h2 id="editTitle"></h2>
+    <div><input type="text" id="editName" autocomplete="off"></div>
+    <div><input type="text" id="editQty" autocomplete="off"></div>
+    <div>
+      <label id="editCatLabel" for="editCat"></label>
+      <select id="editCat"></select>
+    </div>
+    <button class="primary" id="editSave"></button>
+    <button class="finish" id="editCancel"></button>
+  </div>
+</div>
+
+<div class="overlay" id="dishPicker">
+  <div class="panel">
+    <h2 id="dishPickerTitle"></h2>
+    <input type="search" id="dishSearch" autocomplete="off">
+    <button class="adddish" id="newDishBtn"></button>
+    <ul id="dishPickList" class="picklist"></ul>
+    <button class="finish" id="dishPickerClose" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt="" style="margin:0 auto"></button>
+  </div>
+</div>
+
+<div class="overlay" id="dishForm">
+  <div class="panel">
+    <h2 id="dishFormTitle"></h2>
+    <div>
+      <label id="dishNameLabel" for="dishName"></label>
+      <input type="text" id="dishName" autocomplete="off">
+    </div>
+    <div>
+      <label id="sourceLabel" for="dishSource"></label>
+      <div class="srcrow">
+        <input type="text" id="dishSource" inputmode="url" autocomplete="off">
+        <a class="srclink" id="dishSrcLink" target="_blank" rel="noopener" style="display:none"><img src="img/link.svg" width="16" height="16" alt=""></a>
+        <button class="minibtn" id="dishImport" type="button"></button>
+      </div>
+      <div class="hint" id="sourceHint"></div>
+    </div>
+    <div>
+      <label id="ingredientsLabel"></label>
+      <div id="ingRows"></div>
+      <button class="adddish" id="addIngBtn" type="button"></button>
+    </div>
+    <button class="primary" id="dishSave"></button>
+    <button class="danger" id="dishDelete"></button>
+    <button class="finish" id="dishCancel"></button>
+  </div>
+</div>
+
+<div class="overlay" id="aislesSheet">
+  <div class="panel">
+    <h2 id="aislesTitle"></h2>
+    <div class="storerow">
+      <select id="editStoreSel" class="storesel"></select>
+      <button class="minibtn" id="delStoreBtn" type="button" aria-label="Delete" hidden><img src="img/close.svg" width="14" height="14" alt=""></button>
+    </div>
+    <div id="catOrderList"></div>
+    <div class="addcat">
+      <input type="text" id="newCatInput" autocomplete="off">
+      <button class="minibtn" id="newCatBtn" type="button" aria-label="Add"><img src="img/plus.svg" width="16" height="16" alt=""></button>
+    </div>
+    <button class="finish" id="resetAisles" type="button"></button>
+    <button class="finish" id="aislesClose" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt="" style="margin:0 auto"></button>
+  </div>
+</div>
+
+<div class="overlay" id="backupSheet">
+  <div class="panel">
+    <h2 id="backupTitle"></h2>
+    <textarea id="backupText" rows="12" spellcheck="false"></textarea>
+    <button class="primary" id="backupCopy"></button>
+    <button class="primary" id="backupApply"></button>
+    <button class="finish" id="backupClose" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt="" style="margin:0 auto"></button>
+  </div>
+</div>
+
+<div class="overlay" id="cardsSheet">
+  <div class="panel">
+    <h2 id="cardsTitle"></h2>
+    <input type="search" id="cardsSearch" autocomplete="off" hidden>
+    <div class="hint" id="cardsHint" hidden></div>
+    <ul id="cardsList" class="picklist"></ul>
+    <button class="adddish" id="addCardBtn"></button>
+    <div class="storerow">
+      <button class="minibtn" id="exportCards" type="button"></button>
+      <button class="minibtn" id="importCards" type="button"></button>
+    </div>
+    <button class="finish" id="cardsClose" aria-label="Close"><img src="img/close.svg" width="14" height="14" alt="" style="margin:0 auto"></button>
+  </div>
+</div>
+
+<div class="overlay" id="cardForm">
+  <div class="panel">
+    <h2 id="cardFormTitle"></h2>
+    <div>
+      <label id="cardNameLabel" for="cardName"></label>
+      <input type="text" id="cardName" autocomplete="off">
+    </div>
+    <div>
+      <label id="cardNumLabel" for="cardNumber"></label>
+      <div class="numrow">
+        <input type="text" id="cardNumber" inputmode="numeric" autocomplete="off">
+        <button type="button" class="iconbtn" id="cardScan"><img src="img/camera.svg" width="26" height="26" alt=""></button>
+      </div>
+      <input type="file" id="cardPhoto" accept="image/*" capture="environment" style="position:absolute;width:0;height:0;opacity:0">
+      <div class="hint" id="cardNumHint"></div>
+    </div>
+    <div>
+      <label id="cardFmtLabel" for="cardFormat"></label>
+      <select id="cardFormat">
+        <option value="auto"></option>
+        <option value="EAN13">EAN-13</option>
+        <option value="EAN8">EAN-8</option>
+        <option value="UPC">UPC-A</option>
+        <option value="CODE128">Code 128</option>
+        <option value="QR">QR Code</option>
+      </select>
+    </div>
+    <div>
+      <label id="cardColorLabel" for="cardColor"></label>
+      <input type="color" id="cardColor" class="cardcolor">
+    </div>
+    <button class="primary" id="cardSave"></button>
+    <button class="danger" id="cardDelete"></button>
+    <button class="finish" id="cardCancel"></button>
+  </div>
+</div>
+
+<div class="overlay cardview" id="cardView">
+  <div class="cvbox">
+    <div class="cvname" id="cardViewName"></div>
+    <svg id="cardSvg"></svg>
+    <div class="cvnum" id="cardViewNum"></div>
+    <div class="cvhint" id="cardViewHint"></div>
+  </div>
+</div>
+
+<div id="toast"><span id="toastText"></span><button id="toastBtn"></button></div>
+<script src="jsbarcode.min.js"></script>
+<script src="qrcode.min.js"></script>
+<script src="i18n.js"></script>
+<script src="i18n/fr.js"></script>
+<script src="i18n/en.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

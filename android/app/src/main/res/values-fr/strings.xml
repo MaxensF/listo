@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Listo</string>
+
+    <!-- "Shopping done" notification (posted by ListoJobService). -->
+    <string name="notif_done_title">Courses terminées</string>
+    <string name="notif_done_text">La liste de courses a été vidée.</string>
+
+    <!-- File-chooser title when the loyalty-card scan asks for a photo. -->
+    <string name="choose_photo">Photo de la carte</string>
+</resources>

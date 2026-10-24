@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+
+# Android build
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.apk
+*.aab
+*.keystore
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Local-only helpers — contain personal LAN/Tailscale addresses
+deploy_ha.ps1
+check_share.py
+test_mkdir.*
+_*.py
+_*.ps1
+rename_icons.py
+
+# Legacy draft integration kept locally, not part of the project
+custom_components/courses/

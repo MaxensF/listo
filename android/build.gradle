@@ -1,0 +1,4 @@
+// Root build file — plugins only; the app module is minimal by design.
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}

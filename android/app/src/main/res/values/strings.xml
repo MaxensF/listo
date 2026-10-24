@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Listo</string>
+
+    <!-- Base URL of your Home Assistant instance (no path).
+         Seeded into the app's Settings on first launch; editable later
+         inside the app. Tailscale example: http://100.x.y.z:8123 -->
+    <string name="ha_base">http://homeassistant.local:8123</string>
+
+    <!-- "Shopping done" notification (posted by ListoJobService). -->
+    <string name="notif_done_title">Shopping done</string>
+    <string name="notif_done_text">The grocery list was cleared.</string>
+
+    <!-- File-chooser title when the loyalty-card scan asks for a photo. -->
+    <string name="choose_photo">Choose a photo</string>
+</resources>

@@ -1,0 +1,16 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Listo",
+        "description": "Create the shared household grocery list: offline-first mobile app, native todo entity and mini-API. A single instance per Home Assistant.\n\nThe access code is optional: if set, the mobile app must send it with every request.",
+        "data": {
+          "api_token": "API access code (optional)"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "The Listo integration is already configured."
+    }
+  }
+}
