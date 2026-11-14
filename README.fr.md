@@ -138,6 +138,7 @@ curl -X POST -H "Content-Type: application/json" \
 ```
 custom_components/listo/
 ├── manifest.json          # métadonnées HA (domain: listo)
+├── brand/                 # icon.png + icon@2x.png affichés dans l'UI HA (2026.3+)
 ├── __init__.py            # setup : store, vues, panneau, plateforme
 ├── config_flow.py         # ajout via l'UI + code d'accès optionnel
 ├── const.py               # domaine, clés, whitelist de fichiers, limites
