@@ -2,7 +2,7 @@
 // The app is served under /api/listo/app/ — only these files are cached
 // so the app can reopen with zero network. /api/listo/api/* calls always
 // go to the network (fresh data); offline state lives in localStorage.
-var CACHE = "listo-v95";
+var CACHE = "listo-v96";
 var SHELL = [
   "index.html",
   "style.css",

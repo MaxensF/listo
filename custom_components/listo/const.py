@@ -4,7 +4,7 @@ DOMAIN = "listo"
 
 # Integration version — keep in sync with manifest.json. Exposed to the
 # app via the /list payload so Settings can show it.
-VERSION = "1.4.0"
+VERSION = "1.4.1"
 
 # Persistent storage (homeassistant.helpers.storage.Store)
 STORAGE_VERSION = 1

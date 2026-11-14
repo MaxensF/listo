@@ -1115,7 +1115,7 @@
   // so additions appear on other screens with no manual refresh.
   var eventSource = null;
   // Version of this bundled PWA build (bump with the integration).
-  var APP_VERSION = "1.4.0";
+  var APP_VERSION = "1.4.1";
 
   // ---- Update banner ----------------------------------------------------------
   // The server reports its own version in /list; when it is newer than the
