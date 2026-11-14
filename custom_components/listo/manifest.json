@@ -1,6 +1,7 @@
 {
   "domain": "listo",
   "name": "Listo",
+  "categories": ["productivity_information.shopping_groceries"],
   "codeowners": ["@MaxensF"],
   "config_flow": true,
   "documentation": "https://github.com/MaxensF/listo",
